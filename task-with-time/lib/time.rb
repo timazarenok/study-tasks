@@ -1,44 +1,54 @@
 
 class Intervals
   def initialize(times)
-    @times = times.uniq!.sort
+    @times = times.sort
     @new_times = []
-    @current_times = []
-    @count = 0
+    @free_time = []
+    @prev_pair = []
   end
 
   def free_time
-
+    sort_intervals
+    @prev_pair = []
+    @new_times.each do |el| 
+      slice_time(el)
+    end
+    @free_time
   end
-
 
   def sort_intervals
-    (0..@times.size - 2).each do |i|
-      compare(@times[i], @times[i+1])
+    @times.each do |i|
+      compare(i)
     end
+    @new_times.push(@prev_pair)
   end
 
-  def add_new
-    @new_times.push([@current_times[0][0], @current_times[@current_times.size-1][1]])
+  private
+
+  def slice_time(el)
+    @prev_pair.empty? ? @prev_pair = el : slice(el)
   end
-  
-  def compare(first, second)
-    if first[1] >= second[0]
-      @count += 1
-      @current_times.push(first)
+
+  def slice(el)
+    @free_time.push([@prev_pair[1], el[0]])
+    @prev_pair = el
+  end
+
+  def compare(element)
+    @prev_pair.empty? ? @prev_pair = element : add_new(element)
+  end
+
+  def add_new(element)
+    if @prev_pair[1] >= element[0]
+      @prev_pair = [@prev_pair[0], element[1]]
+      @prev_pair
     else
-      if @count > 0
-        @count = 0 
-        @current_times.push(first)
-        add_new
-      else
-        @new_times.push(first)
-      end
+      @new_times.push(@prev_pair)
+      @prev_pair = element
     end
   end
 end
 
-arr = [['10:00', '10:20'], ['10:40', '11:00'], ['10:50', '12:00'], ['12:00', '13:00'], ['10:00', '10:20'], ['12:40', '14:00'], ['16:50', '15:00']]
+arr = [['10:00', '10:20'], ['12:00', '13:00'], ['10:40', '11:00'], ['11:00', '12:00'], ['13:30', '18:20'], ['10:00', '10:20']]
 result = Intervals.new(arr)
-result.sort_intervals
-p result
+p result.free_time

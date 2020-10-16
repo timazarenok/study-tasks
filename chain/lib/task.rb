@@ -1,5 +1,6 @@
-require_relative('pet.rb')
+# frozen_string_literal: true
 
+require_relative('pet.rb')
 
 class Job
   attr_reader :salary
@@ -17,24 +18,22 @@ class Job
 end
 
 class Human
-  def initialize(name: "", money: 0, job: Job.new, pet: Pet.new)
+  def initialize(name: '', money: 0, job: Job.new, pet: Pet.new)
     @name = name
     @money = money
     @job = job
     @pet = pet
   end
 
-  def pet
-    @pet
-  end
+  attr_reader :pet
 
   def nameDog(value)
-    @pet.name=(value)
+    @pet.name = (value)
     "You are successfuly renamed your dog on name: #{@pet.name}"
   end
 
   def tryUpSalary
-    if(money >= 500)
+    if money >= 500
       @job.upSalary(200)
     else
       'Start working'
@@ -47,7 +46,7 @@ class Human
   end
 
   def feedPet
-    if(@money -= 5) < 0 
+    if (@money -= 5).negative?
       'You havent got enough money to feed, go work'
     else
       @money -= 5

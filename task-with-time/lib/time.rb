@@ -1,5 +1,8 @@
 
 class Intervals
+
+  attr_reader: 
+
   def initialize(times)
     @times = times.sort
     @new_times = []

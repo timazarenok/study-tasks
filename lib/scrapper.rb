@@ -17,4 +17,4 @@ browser = Capybara.current_session
 driver = browser.driver.browser
 browser.visit URL
 
-Info.new(driver).get_names 
+p Info.new(driver).get_names 

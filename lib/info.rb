@@ -3,17 +3,17 @@ require 'nokogiri'
 class Info
   def initialize(driver)
     @source = Nokogiri::HTML(driver.page_source)
-    @names = []
-    @images = []
-    @text = []
+    @data = []
   end
 
-  def get_names
-    @names = @source.xpath('//*[@class="b-main-page-blocks-header-2 cfix"]').text
-  end
-
-  def get_images
-    @images = @source.xpath('//i[@class = "b-tile-bg"]/@style').text 
+  def get_data
+    @source.xpath('//*[contains(@class,"b-tile m-1x1 m-info")]').each do |row|
+      name = row.css('[class="b-tile-section"]').text
+      text = row.css('[class="txt max-lines-4"]').text
+      image = row.css('[class="b-tile-bg"]').first['style']
+      @data.push(name: name, text: text, image: image)
+    end
+    @data
   end
 
   def get_text

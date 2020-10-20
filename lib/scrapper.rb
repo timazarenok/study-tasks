@@ -1,5 +1,6 @@
 require './info.rb'
 require 'capybara'
+require './to_csv.rb'
 
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
@@ -17,4 +18,4 @@ browser = Capybara.current_session
 driver = browser.driver.browser
 browser.visit URL
 
-p Info.new(driver).get_names 
+ToCsv.to_csv('./data', Info.new(driver).get_data)

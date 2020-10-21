@@ -14,6 +14,7 @@ class Info
       image = row.css('[class="b-tile-bg"]').first['style']
       id = get_id(row)
       text = get_text(id)
+      
       @browser.go_back
       @data.push(name: name, text: text, image: image)
     end

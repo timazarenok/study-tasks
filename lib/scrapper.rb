@@ -18,4 +18,4 @@ browser = Capybara.current_session
 driver = browser.driver.browser
 browser.visit URL
 
-ToCsv.to_csv('./data', Info.new(driver).get_data)
+ToCsv.to_csv('./data', Info.new(browser, driver).get_data)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'pry'
 
@@ -14,7 +16,6 @@ class Info
       image = row.css('[class="b-tile-bg"]').first['style']
       id = get_id(row)
       text = get_text(id)
-      
       @browser.go_back
       @data.push(name: name, text: text, image: image)
     end
@@ -29,4 +30,4 @@ class Info
     @browser.find('div[id='"#{id}"'] > a[class="b-tile-main').click
     @browser.find('[class="news-text"]').text.slice(0, 200)
   end
-end 
+end

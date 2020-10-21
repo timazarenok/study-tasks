@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './info.rb'
 require 'capybara'
 require './to_csv.rb'

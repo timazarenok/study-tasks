@@ -1,33 +1,37 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
 require 'pry'
 
 class Info
   def initialize(browser, driver)
     @browser = browser
-    @source = Nokogiri::HTML(driver.page_source)
+    @links = []
     @data = []
+    get_links
+  end
+
+  def get_links
+    @browser.all(:xpath, '//*[contains(@class,"b-tile m-1x1")]/a[@class="b-tile-main"]').each do |row|
+      @links.push(row['href'])
+    end
   end
 
   def get_data
-    @source.xpath('//*[contains(@class,"b-tile m-1x1 m-info")]').each do |row|
-      name = row.css('[class*="b-tile-section"]').text
-      image = row.css('[class="b-tile-bg"]').first['style']
-      id = get_id(row)
-      text = get_text(id)
-      @browser.go_back
+    @links.each do |link| 
+      @browser.visit link
+      name = spec_name?
+      image = @browser.find('[class="news-header__image"]')['style']
+      text = @browser.find('[class="news-text"]').text.slice(0, 200)
       @data.push(name: name, text: text, image: image)
     end
     @data
   end
 
-  def get_id(row)
-    row.find('[class="b-tile-main" href*=""]').first[1]
-  end
-
-  def get_text(id)
-    @browser.find('div[id='"#{id}"'] > a[class="b-tile-main').click
-    @browser.find('[class="news-text"]').text.slice(0, 200)
+  def spec_name?
+    if @browser.has_css?('div[class="news-header__title"] > div[class="button-style button-style_special button-style_small button-style_noreflex news-header__button"]')
+      name = @browser.find('div[class="news-header__title"] > div[class="button-style button-style_special button-style_small button-style_noreflex news-header__button"]').text
+    else
+      name = @browser.find('[class="project-navigation__item project-navigation__item_primary project-navigation__item_active"]').text
+    end
   end
 end
